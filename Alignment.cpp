@@ -4,6 +4,14 @@
 #include <map>
 using namespace std; 
 
+// r_coords_qname
+class RCQ {
+public:
+	long rstart;
+	long rend;
+	string qname;
+};
+
 class Alignment {
 public:
 	//Constructor
@@ -21,22 +29,25 @@ public:
 	long   get_left_most_position();
 	long   get_right_most_position();
 	
-	long*  get_r_coords();
-	long   coords[2];
+	long*  get_r_coords();			//This function will save the rstart and rend into coords[]
+	long   coords[2];				//and then return the ptr of coords[]
 	
-	long*  get_q_coords();
-	long   coords2[2];
+	long*  get_q_coords();			//This function will save the qstart and qend into coords2[]
+	long   coords2[2];				//and then return the ptr of coords2[]
 	
 	long   get_rlen();
 	long   get_qlen();
 	
-	//vector<long int>get_r_coords_qname();
+	RCQ*   get_r_coords_qname();
 
 	//	  Variable	//
 	string rname;
-	string qname;
-	long  rstart;
-	long  rend;
+	
+	RCQ *rcq;
+	//string qname;
+	//long  rstart;
+	//long  rend;
+	
 	long  rlen;
 	long  rcov;
 	long  qstart;
@@ -49,10 +60,16 @@ public:
 
 Alignment::Alignment(string rname, string qname, long rstart, long rend, long qstart, long qend, 
 					 long rlen, long qlen, long rcov,long qcov, float pid){
+		
+		rcq = new RCQ();
+		rcq->qname  = qname;
+		rcq->rstart = rstart;
+		rcq->rend   = rend;
+		//this->qname  = qname;
+		//this->rstart = rstart;
+		//this->rend   = rend;
+	
 		this->rname  = rname;
-		this->qname  = qname;
-		this->rstart = rstart;
-		this->rend   = rend;
 		this->qstart = qstart;
 		this->qend   = qend;  			//for sam data, stores the qalen since information of the query is not given
 		this->rlen   = rlen;
@@ -79,7 +96,7 @@ string Alignment::get_ref_name(){
 }
 
 string Alignment::get_query_name(){
-	return qname;
+	return rcq->qname;
 }
 
 long Alignment::get_ref_coverage(){
@@ -95,32 +112,32 @@ float Alignment::get_percent_id(){
 }
 
 long Alignment::get_left_most_position(){
-	if(rend>rstart){
-		return rstart;
+	if(rcq->rend > rcq->rstart){
+		return rcq->rstart;
 	}else{
-		return rend;
+		return rcq->rend;
 	}
 }
 
 long Alignment::get_right_most_position(){
-	if(rend>rstart){
-		return rstart;
+	if(rcq->rend < rcq->rstart){
+		return rcq->rstart;
 	}else{
-		return rend;
+		return rcq->rend;
 	}
 }
 
 long* Alignment::get_r_coords(){
-	coords[0] = rstart;
-	coords[1] = rend;
+	coords[0] = rcq->rstart;
+	coords[1] = rcq->rend;
 	return coords;
 }
 
-/*
-Alignment::get_r_coords_qname(){
 
-	//return (self.rstart,self.rend,self.qname)
-}*/
+RCQ* Alignment::get_r_coords_qname(){
+
+	return rcq;
+}
 
 long* Alignment::get_q_coords(){
 	coords2[0] = qstart;
@@ -165,12 +182,12 @@ public:
 	void   set_r_coords(long start,long end);
 	long   get_rlen();
 	long   get_arlen();
-	long   get_cov();
+	double   get_cov();
 	
 	void   add_id(string id);
 	void   set_label(string new_label);
-	void   add_annotation(string q2name,string label,float percent);
-	map< string, pair<float  ,string > >* get_ann_dict();
+	void   add_annotation(string q2name,string label,double percent);
+	map< string, pair<double  ,string > >* get_ann_dict();
 
 		
 	//variable
@@ -182,11 +199,11 @@ public:
 	long   rstop;
 	long   rlen;
 	long   arlen;
-	float  cov;
+	double  cov;
 	
 	vector<string> id_list;
 //	map< string qname, pair<float pcov ,string annotation_label> p> ann_dict;
-	map< string ,pair<float  ,string > >* ann_dict;
+	map< string ,pair<double  ,string > >* ann_dict;
 };
 
 //Constructor 
@@ -197,10 +214,10 @@ Constructed_Alignment::Constructed_Alignment(string rname, string qname, long rs
 		this->rstop = rstop;
 		this->arlen = rstop - rstart; 	// the alignment length of the reference sequence
 		this->rlen  = rlen;
-		this->cov   = arlen / float(rlen);
+		this->cov   = (arlen*1.0)/(rlen*1.0);
 		this->label = label;
 		id_list.push_back(id1);			// list of queries that are part of this merged alignment
-		this->ann_dict = new map< string , pair<float  ,string > >();
+		this->ann_dict = new map< string , pair<double  ,string > >();
 		//this->ann_dict = dict(); 		// dictionary of { qname : (pcov, annotation_label) }       no need in c++
 }
 
@@ -263,7 +280,7 @@ void Constructed_Alignment::add_id(string id){
 	id_list.push_back(id);
 }
 
-void Constructed_Alignment::add_annotation(string q2name,string label,float percent){
+void Constructed_Alignment::add_annotation(string q2name,string label,double percent){
 	this->ann_dict->insert(make_pair(q2name,  make_pair(percent,label)) );   //[q2name]  = pair<float ,string>(percent, label); 
 	
 }
@@ -275,7 +292,7 @@ long Constructed_Alignment::get_rlen(){
 long Constructed_Alignment::get_arlen(){
 	return arlen;
 }
-long Constructed_Alignment::get_cov(){
+double Constructed_Alignment::get_cov(){
 	return cov;
 }
 void Constructed_Alignment::set_label( string new_label){
@@ -286,12 +303,20 @@ string Constructed_Alignment::get_label(){
 }
 	
 //get_ann_dict
-map< string , pair<float ,string > >* Constructed_Alignment::get_ann_dict(){
+map< string , pair<double ,string > >* Constructed_Alignment::get_ann_dict(){
 	return this->ann_dict;
 }
 
-
+/*
+// test
 int main(void){
+	//Alignment   (string rname, string qname, long rstart, long rend, long  qstart, long qend, long rlen, long qlen, long rcov, long qcov, float pid);
+	Alignment alig("rname","qname",112, 345, 678, 912, 356, 482, 134, 432, 3.5);
+	string name1 = alig.get_query_name();
+	string name2 = alig.get_ref_name();
+	cout<<"Check get_query_name: " << name1 <<endl;
+	cout<<"Check get_ref_name: " << name2 <<endl;
+	
 	Constructed_Alignment a("c", "d", 12, 23, "e", 34, "f");
 	map< string , pair<float  ,string > > *b;
 	b = a.get_ann_dict();
@@ -299,6 +324,7 @@ int main(void){
 }
 
 
+*/
 
 
 
