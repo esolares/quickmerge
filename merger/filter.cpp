@@ -1,11 +1,8 @@
 //This filter can clean up the fasta file, get rid of the symbol that are useless
 
-#include<iostream>
-#include<string>
-#include<algorithm>
-#include<fstream>
-#include<string.h>
-#include<map>
+#include <iostream>
+#include "filter.h"
+
 using namespace std;
  
 int main(){
@@ -60,7 +57,7 @@ int main(){
 		l="";
 	}
  
-    fin.close();//Ãö³¬ÀÉ®×
+    fin.close();
     fout.close();
     system("pause");
     return 0;

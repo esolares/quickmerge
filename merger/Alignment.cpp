@@ -1,196 +1,165 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <map>
-#include <unordered_map>
+#include "Alignment.h"
 
-using namespace std; 
+using namespace std;
 
-class Alignment_Data{
-public:
-	string label;		//the row data, uesd as key
-						//ex: 2620178 2620733 6424 6980 6 6 0
-	string refid;
-	long Rstart;
-	long Rend; 
-	long Qstart; 
-	long Qend; 
-	int Error;
-	int SimError;		//similar error
-	int negNum;			//negative number ( Deletion )
-	double pid;
-	
+
 	//  Constructor															
-	Alignment_Data(string label, long Rstart, long Rend, long Qstart, long Qend, int Error ,int SimError ,int negNum){
-		this->label = label;
-		this->Rstart = Rstart;
-		this->Rend = Rend;
-		this->Qstart = Qstart;
-		this->Qend = Qend;
-		this->Error = Error;
-		this->SimError = SimError;
-		this->negNum = negNum;
-	}
-	
-	void set_pid (double pid){
-		this->pid = pid;
-	}
-	
-	double get_pid(){
-		return pid;
-	}
-	
-	long get_left_most_position(){
-		if(Rend > Rstart){
-			return Rstart;
-		}else{
-			return Rend;
-		}
-	}
-	
-	long get_right_most_position(){
-		if(Rend < Rstart){
-			return Rstart;
-		}else{
-			return Rend;
-		}
-	}
-	
-	long get_rstart(){
+Alignment_Data::Alignment_Data(string label, long Rstart, long Rend, long Qstart, long Qend, int Error ,int SimError ,int negNum){
+	this->label = label;
+	this->Rstart = Rstart;
+	this->Rend = Rend;
+	this->Qstart = Qstart;
+	this->Qend = Qend;
+	this->Error = Error;
+	this->SimError = SimError;
+	this->negNum = negNum;
+}
+
+void Alignment_Data::set_pid (double pid){
+	this->pid = pid;
+}
+
+double Alignment_Data::get_pid(){
+	return pid;
+}
+
+long Alignment_Data::get_left_most_position(){
+	if(Rend > Rstart){
 		return Rstart;
-	}
-	
-	long get_rend(){
+	}else{
 		return Rend;
 	}
-	
-	long get_qstart(){
-		return Qstart;
+}
+
+long Alignment_Data::get_right_most_position(){
+	if(Rend < Rstart){
+		return Rstart;
+	}else{
+		return Rend;
 	}
-	
-	long get_qend(){
-		return Qend;
-	}
-	
-};
+}
+
+long Alignment_Data::get_rstart(){
+	return Rstart;
+}
+
+long Alignment_Data::get_rend(){
+	return Rend;
+}
+
+long Alignment_Data::get_qstart(){
+	return Qstart;
+}
+
+long Alignment_Data::get_qend(){
+	return Qend;
+}
 
 
-class Header{
-public:
-	string header;	// rname + qname , used as key
-					// ex:>000003F|arrow scf7180000001372|quiver
-					
-	string rname;	// ex:>000003F|arrow
-	string qname;	// ex:scf7180000001372|quiver
-	long rlen;
-	long qlen;
-	unordered_map< string , Alignment_Data* > dataMap;	//map sotres key and ptr pair.
-	
-	//constructor
-	Header(string header, long rlen, long qlen){
-		this->header = header;
-		this->rlen = rlen;
-		this->qlen = qlen;
-	}
-	
-	// adding data by information Rstart Rend .......
-	void add_alignment( string label, long Rstart, long Rend, long Qstart, long Qend, int Error ,int SimError ,int negNum){
-		Alignment_Data *ad = new Alignment_Data(label,  Rstart, Rend,  Qstart, Qend, Error ,SimError ,negNum);
-		dataMap.insert( make_pair( label, ad ) );
-	}
-	
-	// adding data by object
-	void add_aglinment( string label, Alignment_Data* ad){
-		dataMap.insert( make_pair( label, ad ) );
-	}
-	
-	//serach data by label, return ptr of object
-	Alignment_Data* get_alignment(string label){
-		unordered_map< string , Alignment_Data* >::iterator iter = dataMap.find(label);
-		if(iter != dataMap.end()){
-			return iter->second;
-		}
-		else{
-			cout<<"Do not Find alignment data: "<<label<<endl;
-		}
-	}
-	
-	//remove data from map
-	void remove_alignment( string label ){
-		unordered_map< string , Alignment_Data* >::iterator iter = dataMap.find(label);
-		if (iter != dataMap.end()){
-			delete iter->second;	//remove object
-			dataMap.erase(iter);	//remove key in map
-		}
-		else{
-			cout<<"Do not Find header:"<< label<<endl;
-		}
-	}
-	
-	string get_ref_name(){
-		return rname;
-	}
-	
-	string get_query_name(){
-		return qname;
-	}
-	
-	long get_rlen(){
-		return rlen;
-	}
-	
-	long get_qlen(){
-		return qlen;
-	}
-	
-};
 
 
-class Alignment {
-public:	
-	string source; 
-	string datatype;
-	unordered_map< string , Header* > headerMap;
+//constructor
+Header::Header(string header, long rlen, long qlen){
+	this->header = header;
+	this->rlen = rlen;
+	this->qlen = qlen;
+}
+	
+// adding data by information Rstart Rend .......
+void Header::add_alignment( string label, long Rstart, long Rend, long Qstart, long Qend, int Error ,int SimError ,int negNum){
+	Alignment_Data *ad = new Alignment_Data(label,  Rstart, Rend,  Qstart, Qend, Error ,SimError ,negNum);
+	dataMap.insert( make_pair( label, ad ) );
+}
 
-	
-	Alignment(string source, string datatype){
-		this->source = source;
-		this->datatype = datatype;
+// adding data by object
+void Header::add_alignment( string label, Alignment_Data* ad){
+	dataMap.insert( make_pair( label, ad ) );
+}
+
+//serach data by label, return ptr of object
+Alignment_Data* Header::get_alignment(string label){
+	unordered_map< string , Alignment_Data* >::iterator iter = dataMap.find(label);
+	if(iter != dataMap.end()){
+		return iter->second;
 	}
-	
-	/*
-	void add_header( string header, long rlen, long qlen ){
-		Header head( header, rlen, qlen);
-		headerMap.insert( make_pair( header , head ) );
+	else{
+		cout<<"Do not Find alignment data: "<<label<<endl;
 	}
-	*/
-	
-	void add_header( string header, Header* h ){
-		headerMap.insert( make_pair( header , h ) );
-		//headerMap[header] = h;								//need 	empty constructor at begin  :  Header(){}	
+}
+
+//remove data from map
+void Header::remove_alignment( string label ){
+	unordered_map< string , Alignment_Data* >::iterator iter = dataMap.find(label);
+	if (iter != dataMap.end()){
+		delete iter->second;	//remove object
+		dataMap.erase(iter);	//remove key in map
 	}
-	
-	Header* get_header( string header){
-		unordered_map< string , Header* >::iterator iter = headerMap.find(header);
-		if(iter != headerMap.end()){
-			return iter->second;
-		}
-		else{
-			cout<<"Do not Find header: "<<header<<endl;
-		}
+	else{
+		cout<<"Do not Find header:"<< label<<endl;
 	}
-	
-	void remove_header( string header ){
-		unordered_map< string , Header* >::iterator iter = headerMap.find(header);	//iterator
-		if (iter != headerMap.end()){
-			delete iter->second;
-			headerMap.erase(iter);
-		}
-		else{
-			cout<<"Do not Find header:"<< header<<endl;
-		}
+}
+
+string Header::get_ref_name(){
+	return rname;
+}
+
+string Header::get_query_name(){
+	return qname;
+}
+
+long Header::get_rlen(){
+	return rlen;
+}
+
+long Header::get_qlen(){
+	return qlen;
+}
+
+
+
+
+
+
+
+Alignment::Alignment(string source, string datatype){
+	this->source = source;
+	this->datatype = datatype;
+}
+
+/*
+void add_header( string header, long rlen, long qlen ){
+	Header head( header, rlen, qlen);
+	headerMap.insert( make_pair( header , head ) );
+}
+*/
+
+void Alignment::add_header( string header, Header* h ){
+	headerMap.insert( make_pair( header , h ) );
+	//headerMap[header] = h;								//need 	empty constructor at begin  :  Header(){}
+}
+
+Header* Alignment::get_header( string header){
+	unordered_map< string , Header* >::iterator iter = headerMap.find(header);
+	if(iter != headerMap.end()){
+		return iter->second;
 	}
-};
+	else{
+		cout<<"Do not Find header: "<<header<<endl;
+	}
+}
+
+void Alignment::remove_header( string header ){
+	unordered_map< string , Header* >::iterator iter = headerMap.find(header);	//iterator
+	if (iter != headerMap.end()){
+		delete iter->second;
+		headerMap.erase(iter);
+	}
+	else{
+		cout<<"Do not Find header:"<< header<<endl;
+	}
+}
+
 
 
 

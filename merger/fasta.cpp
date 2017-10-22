@@ -3,99 +3,88 @@
 
 
 #include<iostream>
-#include<fstream>
-#include<map>
-#include<string.h>
-#include<unordered_map>
+#include "fasta.h"
 
 
 using namespace std;
 
-class fastaReader {
-public:
-	map<string, pair<streampos, streampos>> mark;	//bookmark for header: < start , end > 
-	
-	///////////////////
-	//				 //
-	//	constructir  //
-	//				 //
-	///////////////////
-	fastaReader( string filename){
-		
-    	ifstream fp(filename, ifstream::in | ios::binary);
-    	char line[128];
-    	//fp.open(filename, ios::in);// open file
-    
-    	if(!fp){	//if fail to open the file
-        	cout<<"Fail to open file: "<<filename<<endl;
-    	}
-    
-    
-    	string prev = "";	//string to save previous line
-    	string header = "";
-    	string tempS = "";	//temp string
-    	streampos pos = fp.tellg();		//stream position
-    	streampos pos2;					//previous stram position
-    	streampos start;				//start of the seq
-    	streampos end;					//end of the seq
-    
-    	//map<string, pair<streampos, streampos>> mark;	//bookmark
-    
-    	while(fp.getline(line, sizeof(line), '\n')){
-    	
-    		//if found header (start with '>')
-    		if (line[0] == '>'){
-    		
-    			//record the end of the seq
-    			if(prev != "")
-    				end = pos2;
-    			//hash into map
-    			if(header!=""){
-    				mark[header] = make_pair(start, end);		//store into map
-    			}
-    		
-    			//record the header and start pos of seq
-    			tempS = line;
-    			start = fp.tellg();
-    			
-    			
-    			//////////////////////////
-    			//					    //
-    			//   parse the header   //
-    			//					    //
-    			//////////////////////////
-				//this section can filt out the useless symbol and store the clean header
-				char s[256];
-				strcpy(s, tempS.c_str());
-    			
-         		const char *del = " ,*=/_\t";
-         		char *p;
-         		p = strtok(s,del);
 
-                cout << " get header: " <<endl<<p <<endl;
-                //p=strtok(NULL,d);
+fastaReader::fastaReader( string filename){
 
-         		header = p;
+	ifstream fp(filename, ifstream::in | ios::binary);
+	char line[128];
+	//fp.open(filename, ios::in);// open file
 
+	if(!fp){	//if fail to open the file
+		cout<<"Fail to open file: "<<filename<<endl;
+	}
+
+
+	string prev = "";	//string to save previous line
+	string header = "";
+	string tempS = "";	//temp string
+	streampos pos = fp.tellg();		//stream position
+	streampos pos2;					//previous stram position
+	streampos start;				//start of the seq
+	streampos end;					//end of the seq
+
+	//map<string, pair<streampos, streampos>> mark;	//bookmark
+
+	while(fp.getline(line, sizeof(line), '\n')){
+
+		//if found header (start with '>')
+		if (line[0] == '>'){
+
+			//record the end of the seq
+			if(prev != "")
+				end = pos2;
+			//hash into map
+			if(header!=""){
+				mark[header] = make_pair(start, end);		//store into map
 			}
-		
-			prev = line;
-        	//cout<<pos<<" " <<line<<endl;
-        	pos2 = pos;
-        	pos = fp.tellg();	//move the position ptr
-    	}
-    	
-    	fp.clear();									//clear the fp ptr, because the state flag of fp was -1.
-    	fp.seekg(0, fp.end);						//move to the end of the file
-    	//need to do one more time since there are no header to trigger mapping
-    	mark[header].first = start;
-    	mark[header].second = pos2;   				//record the end of the last line.
-	
- 
-    	fp.close();//close file
+
+			//record the header and start pos of seq
+			tempS = line;
+			start = fp.tellg();
+
+
+			//////////////////////////
+			//					    //
+			//   parse the header   //
+			//					    //
+			//////////////////////////
+			//this section can filt out the useless symbol and store the clean header
+			char s[256];
+			strcpy(s, tempS.c_str());
+
+			const char *del = " ,*=/_\t";
+			char *p;
+			p = strtok(s,del);
+
+			cout << " get header: " <<endl<<p <<endl;
+			//p=strtok(NULL,d);
+
+			header = p;
+
 		}
-	
-};
+
+		prev = line;
+		//cout<<pos<<" " <<line<<endl;
+		pos2 = pos;
+		pos = fp.tellg();	//move the position ptr
+	}
+
+	fp.clear();									//clear the fp ptr, because the state flag of fp was -1.
+	fp.seekg(0, fp.end);						//move to the end of the file
+	//need to do one more time since there are no header to trigger mapping
+	mark[header].first = start;
+	mark[header].second = pos2;   				//record the end of the last line.
+
+
+	fp.close();//close file
+	}
+
+
 
 
 /*
