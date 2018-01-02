@@ -42,6 +42,9 @@
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/quickmerge.iml
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
@@ -50,6 +53,7 @@
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
+cmake-build-debug/CMakeFiles/clion-log.txt
 
 # Gradle:
 .idea/gradle.xml
