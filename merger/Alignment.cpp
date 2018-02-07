@@ -16,12 +16,12 @@ Alignment_Data::Alignment_Data(string label, long Rstart, long Rend, long Qstart
 	this->negNum = negNum;
 }
 
-void Alignment_Data::set_pid (double pid){
-	this->pid = pid;
+void Alignment_Data::set_pctid (double pctid){
+	this->pctid = pctid;
 }
 
-double Alignment_Data::get_pid(){
-	return pid;
+double Alignment_Data::get_pctid(){
+	return pctid;
 }
 
 long Alignment_Data::get_left_most_position(){
@@ -145,7 +145,17 @@ Header* Alignment::get_header( string header){
 		return iter->second;
 	}
 	else{
-		cout<<"Do not Find header: "<<header<<endl;
+		cout<<"Did not find header: "<<header<<endl;
+        return nullptr;
+	}
+}
+
+void Alignment::list_headers() {
+    cout << "Listing headers in Alignment object" << endl;
+    cout << "Is empty? "<<headerMap.empty()<<endl;
+    unordered_map< string , Header*>::iterator iter = headerMap.begin();
+	if(iter != headerMap.end()){
+		cout << iter->second << endl;
 	}
 }
 
@@ -156,7 +166,7 @@ void Alignment::remove_header( string header ){
 		headerMap.erase(iter);
 	}
 	else{
-		cout<<"Do not Find header:"<< header<<endl;
+		cout<<"Did not find header:"<< header<<endl;
 	}
 }
 

@@ -31,10 +31,10 @@ public:
     int Error;
     int SimError;		//similar error
     int negNum;			//negative number ( Deletion )
-    double pid;
+    double pctid;
 
-    void set_pid (double pid);
-    double get_pid();
+    void set_pctid (double pctid);
+    double get_pctid();
     long get_left_most_position();
     long get_right_most_position();
     long get_rstart();
@@ -89,6 +89,7 @@ public:
 
     void add_header( std::string header, Header* h );
     Header* get_header( std::string header);
+    void list_headers();
     void remove_header( std::string header );
 };
 
