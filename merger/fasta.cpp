@@ -190,6 +190,8 @@ fastaReader::fastaReader(string filename) {
     // Check if file opens successfully
     if (!fp) {cout<<"Failed to open file: "<<filename<<endl; return;}
 
+    infile_name = filename;
+
     // Declare necessary variables
     string header = "";
     streampos pos = fp.tellg();
@@ -248,9 +250,51 @@ fastaReader::fastaReader(string filename) {
     }*/
 } 
 
+void fastaReader::print_headers()
+{
+    for (auto it = this->mark.begin(); it != this->mark.end(); ++it )
+    {
+        cout << it->first << endl;
+    }
+}
+
+
+void fastaReader::output_fasta(string filename)
+{
+    ifstream infile;
+    infile.open(this->infile_name);
+    if (!infile) {cout<<"Failed to open file: "<<filename<<endl; return;}
+
+    ofstream outfile;
+    outfile.open(filename);
+    cout << "Writing to file: " << filename << endl;
+
+    char c;
+    
+    for (auto it = this->mark.begin(); it != this->mark.end(); ++it )
+    {
+        outfile <<">"<< it->first << endl;
+        infile.seekg(it->second.first);
+        while (infile.tellg() != it->second.second + (streampos) 1)
+        {
+            c = infile.get();
+            if (c != ' ' and c != '\n') 
+            {
+                outfile << c;
+            }
+        }
+        infile.seekg(0);
+        outfile << endl;
+    }
+    
+    infile.close();
+    outfile.close();
+}
 /*
+
 int main(int argc, char* argv[]) {
     fastaReader f(argv[1]);
+    f.output_fasta("out.fasta");
     cout << "Successful termination" << endl;
     return 0;
 }*/
