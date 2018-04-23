@@ -89,3 +89,45 @@ fabric.properties
 # modules.xml
 
 merger/main.cpp
+
+# Make Ojects and Executables
+MUMmer3.23/src/kurtz/libbasedir/*.o
+
+# This will ignore binaries, and README inside as well
+MUMmer3.23/aux_bin/ 
+
+# Ignore quickmerge binary
+merger/quickmerge 
+.quickmergerc
+quickmerge
+
+# Why aren't these in a bin dir?!?! 
+# Makefile has them floating in the current directory
+# Would change, but could potentially break stuff
+mummerplot
+show-snps
+promer
+gaps
+exact-tandems
+repeat-match
+show-tiling
+mgaps
+dnadiff
+run-mummer3
+delta-filter
+show-coords
+show-aligns
+combineMUMs
+nucmer2xfig
+run-mummer1
+annotate
+show-diff
+mummer
+mapview
+nucmer
+
+# VS-Code files
+.vscode
+
+# Ecoli Fasta files
+sample-data/

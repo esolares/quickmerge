@@ -109,11 +109,11 @@ MAINFUNCTION
                       mmcallinfo.matchnucleotidesonly,
                       &mmcallinfo.subjectfile[0]) != 0)
   {
-    STANDARDMESSAGE;
+    STANDARDMESSAGE; // Error Occured
   }
   if(procmaxmatches(&mmcallinfo,&subjectmultiseq) != 0)
   {
-    STANDARDMESSAGE;
+    STANDARDMESSAGE; // Error Occured
   }
   freemultiseq (&subjectmultiseq);
   checkspaceleak ();
