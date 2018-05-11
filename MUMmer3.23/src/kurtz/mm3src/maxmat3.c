@@ -93,7 +93,7 @@ MAINFUNCTION
 
   DEBUGLEVELSET;
   initclock();
-  retcode = parsemaxmatoptions (&mmcallinfo, argc, argv);
+  retcode = parsemaxmatoptions (&mmcallinfo, argc, argv); // set flags within mmcallinfo struct
   if (retcode < 0)
   {
     STANDARDMESSAGE;  // return error code and show message
@@ -104,7 +104,11 @@ MAINFUNCTION
     mmcheckspaceleak ();
     return EXIT_SUCCESS;
   }
-  DEBUGCODE(1,showmaxmatflags (argv[0], &mmcallinfo));
+  /* Debug(L,S) return S if L <= debug level
+     debuglevel = 0 by defualt
+     What is getdebuglevel() 
+  */
+  DEBUGCODE(1,showmaxmatflags (argv[0], &mmcallinfo)); // This shows flags if in debug mode. 
   if (getmaxmatinput (&subjectmultiseq,
                       mmcallinfo.matchnucleotidesonly,
                       &mmcallinfo.subjectfile[0]) != 0)
