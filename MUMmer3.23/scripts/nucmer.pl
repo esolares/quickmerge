@@ -333,6 +333,9 @@ sub main ( )
 
     #-- Run mummer | mgaps and assert return value is zero
     print (STDERR "2,3: RUNNING mummer AND CREATING CLUSTERS\n");
+    # .ntref is the output of prenuc
+    # qry_file (fasta file?)
+    # query file ==> multiple queries (header, string) <Python called in Perl>
     open(ALGO_PIPE, "$algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file |")
 	or $tigr->bail ("ERROR: could not open $algo_path output pipe $!");
     open(CLUS_PIPE, "| $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac > $pfx.mgaps")
