@@ -322,6 +322,7 @@ sub main ( )
 
     #-- Run prenuc and assert return value is zero
     print (STDERR "1: PREPARING DATA\n");
+    print ("$prenuc_path $ref_file > $pfx.ntref\n");
     $err[0] = $tigr->runCommand
 	("$prenuc_path $ref_file > $pfx.ntref");
 
@@ -333,6 +334,10 @@ sub main ( )
 
     #-- Run mummer | mgaps and assert return value is zero
     print (STDERR "2,3: RUNNING mummer AND CREATING CLUSTERS\n");
+    print(ALGO_PIPE); #file handler
+    print("$algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file |");
+    print("| $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac > $pfx.mgaps");    
+    #die("stop 1");
     open(ALGO_PIPE, "$algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file |")
 	or $tigr->bail ("ERROR: could not open $algo_path output pipe $!");
     open(CLUS_PIPE, "| $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac > $pfx.mgaps")
