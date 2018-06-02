@@ -96,12 +96,20 @@ void doWork(Queries *qs){
     cout << endl;
 }
 
+// Getting fasta information
+void getFastaInfo( string filename, unordered_map<string, pair<streampos, streampos> > &m ){
+
+}
+
+// Write each fasta header stream to it's own fasta file
+// File Reader/ Writer, Make a list of filenames in query 
+
 int main(int argc, char **argv)
 {
     Queries jobs;
-    int thread_count = 5;
+    int thread_count = 5; // number of threads spawned
 
-    for (int i = 0; i < 20; i++) { // Populate the Job Queries
+    for (int i = 0; i < 11; i++) { // Populate the Job Queries, i is number if queries
         string name;
         name = (char)((int)'a' + i);
         int delay = (rand() % 2000) + 1000;
@@ -111,6 +119,11 @@ int main(int argc, char **argv)
 
         jobs.push(q);
     }
+
+    // 1. Use Khalid's code to get query information
+    // Constructor
+    // Output file methon
+    // Constructor again
 
     /* Spawn `m` threads to work on `n` queries*/
     // 2. Run parrallelized version of mummer, merge mpags file after complete 
@@ -127,5 +140,16 @@ int main(int argc, char **argv)
     // 1. Get the output args form prenuc, add number of threads to the cli
     //-- Run prenuc and assert return value is zero
     //-- Run mummer | mgaps and assert return value is zero
+
+    // query_i_ref.mgaps
+
+    // concated mgaps filename
+    // prefix.mgaps
+    // CALL MUMMER THROUGH SYSTEM CALL
+
+    // Get the output files and mpgaps concat them 
+
+    // Potentiallly run post nuc as a result as well
+    // Maybe let Perl script still run post nuc
     return 0;
 }
