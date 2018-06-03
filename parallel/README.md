@@ -44,3 +44,9 @@ removeTempFiles(&cargs)
 rm /home/user/Desktop/quickmerge/parallel/temp/fasta/*
 rm /home/user/Desktop/quickmerge/parallel/temp/mgaps/*
 ```
+
+## Integrating into nucmer.pl
+```perl
+#my $mt_mummer = "$mt_mummer_path $num_threads $algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac $pfx.mgaps"
+system($mt_mummer);
+```
