@@ -249,6 +249,7 @@ sub main ( )
     my $prenuc_path = "$AUX_BIN_DIR/prenuc";
     my $postnuc_path = "$AUX_BIN_DIR/postnuc";
     my $showcoords_path = "$BIN_DIR/show-coords";
+    #my $mt_mummer_path = "../parallel/mt_mummer";
 		     
     #-- Check that the files needed are all there and readable/writable
     {
@@ -337,9 +338,13 @@ sub main ( )
     # .ntref is the output of prenuc
     # qry_file (fasta file?)
     # query file ==> multiple queries (header, string) <Python called in Perl>
-    print(ALGO_PIPE); #file handler
     print("$algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file |");
     print("| $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac > $pfx.mgaps");    
+
+    # Where Multithreaded Mummer should be called
+    #my $mt_mummer = "$mt_mummer_path $algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file | $mgaps_path -l $clus -s $gap -d $ddiff -f $dfrac > $pfx.mgaps";
+    #system($mt_mummer);
+
     #die("stop 1");
     open(ALGO_PIPE, "$algo_path $algo $mdir -l $size -n $pfx.ntref $qry_file |")
 	or $tigr->bail ("ERROR: could not open $algo_path output pipe $!");
