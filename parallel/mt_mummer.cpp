@@ -109,8 +109,8 @@ void getFastaInfo( string filename, fastaReader reader, Queries *jobs, Args* arg
             int bLength = filename.find_last_of(".") - filename.find_last_of("/");
             string body = filename.substr( filename.find_last_of("/")+1, bLength-1); // Get body for filename
 
-            string fasta = arg->workingPath + "/parallel/temp/fasta/" + body + "_q" + to_string(qNum) + ".fasta";
-            string mgaps = arg->workingPath + "/parallel/temp/mgaps/" + body + "_q" + to_string(qNum) + ".mgaps";
+            string fasta = arg->workingPath + "/temp/fasta/" + body + "_q" + to_string(qNum) + ".fasta";
+            string mgaps = arg->workingPath + "/temp/mgaps/" + body + "_q" + to_string(qNum) + ".mgaps";
 
             seperateFastaQuery(filename, fasta, header, pair); // Put each query into its own file
             //cout << fname << endl;
@@ -125,6 +125,13 @@ void getFastaInfo( string filename, fastaReader reader, Queries *jobs, Args* arg
             cout << job->cmd << endl;
             qNum++;
     }
+}
+
+void createTmpPath(Args* arg){
+    string path = arg->workingPath;
+    system("mkdir -p " + path);
+    system("mkdir -p " + path "/fasta/");
+    system("mkdir -p " + path + "/mgaps/");
 }
 
 void removeTempFiles(Args* arg){
@@ -169,6 +176,7 @@ int main(int argc, char **argv) {
 
     // Itterate though unordered map and save each fasta header into its own file
     // Places each fasta query into Query obj and puts the queries in Queries Priority Queue
+    createTmpPath(&cargs);
     getFastaInfo(cargs.fasta, fReader, &jobs, &cargs);
 
     /* Spawn `m` threads to work on `n` queries*/
