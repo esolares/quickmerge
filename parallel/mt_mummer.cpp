@@ -130,23 +130,23 @@ void getFastaInfo( string filename, fastaReader reader, Queries *jobs, Args* arg
 void createTmpPath(Args* arg){
     string path = arg->workingPath + "/temp";
     string tmp = ("mkdir -p " + path);
-    string fasta = ("mkdir -p " + tmp + "/fasta/");
-    string mgaps = ("mkdir -p " + tmp + "/mgaps/");
+    string fasta = (tmp + "/fasta/");
+    string mgaps = (tmp + "/mgaps/");
     system(tmp.c_str());
     system(fasta.c_str());    
     system(mgaps.c_str());
 }
 
 void removeTempFiles(Args* arg){
-    string cmd = arg->workingPath + "/parallel/";
-    string c1 = "exec rm " + cmd + "temp/fasta/*"; 
-    string c2 = "exec rm " + cmd + "temp/mgaps/*"; 
+    string cmd = arg->workingPath;
+    string c1 = "exec rm " + cmd + "/temp/fasta/*"; 
+    string c2 = "exec rm " + cmd + "/temp/mgaps/*"; 
     system(c1.c_str());
     system(c2.c_str());
 }
 
 void concatMgaps(Args* arg){
-    string cwd = arg->workingPath + "/parallel/temp/mgaps/*.mgaps";
+    string cwd = arg->workingPath + "/temp/mgaps/*.mgaps";
     string dest = arg->workingPath + "/" + arg->mgaps;
     string command = ("cat " + cwd +" > " + dest);
     const char* cmd = command.c_str();
