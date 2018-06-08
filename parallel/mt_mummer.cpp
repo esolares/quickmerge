@@ -129,9 +129,9 @@ void getFastaInfo( string filename, fastaReader reader, Queries *jobs, Args* arg
 
 void createTmpPath(Args* arg){
     string path = arg->workingPath;
-    system("mkdir -p " + path);
-    system("mkdir -p " + path "/fasta/");
-    system("mkdir -p " + path + "/mgaps/");
+    system("mkdir -p " + path.c_str());
+    system("mkdir -p " + path.c_str() + "/fasta/");
+    system("mkdir -p " + path.c_str() + "/mgaps/");
 }
 
 void removeTempFiles(Args* arg){
