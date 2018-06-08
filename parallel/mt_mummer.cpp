@@ -131,7 +131,7 @@ void createTmpPath(Args* arg){
     string path = arg->workingPath + "/temp";
     string tmp = ("mkdir -p " + path);
     string fasta = ("mkdir -p " + tmp + "/fasta/");
-    string mgaps = ("mkdir -p " + tmp.c_str() + "/mgaps/");
+    string mgaps = ("mkdir -p " + tmp + "/mgaps/");
     system(tmp.c_str());
     system(fasta.c_str());    
     system(mgaps.c_str());
